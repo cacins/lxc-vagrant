@@ -1,0 +1,14 @@
+---
+- hosts: all
+  sudo: true
+  tasks:
+  - apt: update_cache=yes
+  - apt: name=libpam-radius-auth state=present
+  - apt: name=ntp state=present
+  - copy: src=/etc/ntp.conf dest=/etc/ntp.conf
+  - service: name=ntp state=restarted
+  - lineinfile: dest=/etc/pam_radius_auth.conf line="10.2.252.254    nslab123        1"
+  - lineinfile: dest=/etc/pam.d/sshd insertbefore="@include common-auth" line="auth sufficient pam_radius_auth.so"
+  - lineinfile: dest=/etc/pam.d/sudo insertafter="#%PAM-1.0" line="auth      sufficient    pam_radius_auth.so"
+  - user: name=rbilan shell=/bin/bash group=root groups=sudo
+  - file: path=/home/rbilan/.bash_history state=touch owner=rbilan
