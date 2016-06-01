@@ -1,0 +1,39 @@
+VAGRANTFILE_API_VERSION = "2"
+BASE_IMAGE = "fgrehm/trusty64-lxc"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.define "mprokop" do |box|
+	box.vm.hostname = "pliva"
+	box.vm.box = BASE_IMAGE
+	box.vm.provider :lxc do |provider|
+   	provider.container_name = :machine
+        provider.customize 'network.veth.pair', 'pliva'
+	provider.customize 'network.script.up', '/etc/lxc/ifup' # Interface up configuration
+	provider.customize 'network.script.down', '/etc/lxc/ifdown' # Interface down configuration
+	end
+  end
+
+  config.vm.define "shull" do |box|
+        box.vm.hostname = "shull"
+        box.vm.box = BASE_IMAGE
+        box.vm.provider :lxc do |provider|
+        provider.container_name = :machine
+        provider.customize 'network.veth.pair', 'shull'
+        provider.customize 'network.script.up', '/etc/lxc/ifup' # Interface up configuration
+        provider.customize 'network.script.down', '/etc/lxc/ifdown' # Interface down configuration
+        end
+  end
+
+  config.vm.define "rbilan" do |box|
+        box.vm.hostname = "rbilan"
+        box.vm.box = BASE_IMAGE
+        box.vm.provider :lxc do |provider|
+        provider.container_name = :machine
+        provider.customize 'network.veth.pair', 'rbilan'
+        provider.customize 'network.script.up', '/etc/lxc/ifup' # Interface up configuration
+        provider.customize 'network.script.down', '/etc/lxc/ifdown' # Interface down configuration
+        end
+  end
+  end
+  
